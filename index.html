@@ -96,14 +96,38 @@
             </div>
         </div>
         
-        <div class="lg:col-span-5 glass p-8 rounded-3xl relative overflow-hidden border border-white/10 aspect-square flex flex-col justify-center items-center text-center">
-            <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
-            <div class="w-24 h-24 rounded-full bg-[#2B90DC]/10 border border-[#2B90DC]/20 flex items-center justify-center text-[#2B90DC] text-4xl mb-6 shadow-inner animate-pulse">
-                <i class="fa-solid fa-earth-americas"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-2 text-white">Your Global Gateways</h3>
-            <p class="text-sm text-slate-400 max-w-xs">Connecting passionate Bangladeshi students to world-class educational ecosystems.</p>
+        <!-- 🎛️ রাইট সাইড ইমেজ স্লাইডার কন্টেইনার -->
+<div class="lg:col-span-5 relative overflow-hidden rounded-3xl border border-white/10 aspect-[4/5] sm:aspect-square group shadow-2xl">
+    
+    <!-- স্লাইডারের ভেতরের ইমেজগুলো (ইমেজের পাথ বা লিংক আপনার সুবিধা মতো পরিবর্তন করে নিবেন) -->
+    <div id="slider" class="flex w-full h-full transition-transform duration-700 ease-in-out">
+        <div class="w-full h-full shrink-0 relative">
+            <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800" alt="Company Image 1" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#001a40]/90 via-transparent to-transparent"></div>
         </div>
+        <div class="w-full h-full shrink-0 relative">
+            <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800" alt="Company Image 2" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#001a40]/90 via-transparent to-transparent"></div>
+        </div>
+        <div class="w-full h-full shrink-0 relative">
+            <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=800" alt="Company Image 3" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#001a40]/90 via-transparent to-transparent"></div>
+        </div>
+    </div>
+
+    <!-- 🏷️ ইমেজের ওপর টেক্সট ওভারলে (গ্লাসমরফিক ডিজাইন) -->
+    <div class="absolute bottom-6 left-6 right-6 glass p-5 rounded-2xl border border-white/10 z-10">
+        <h3 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-building-columns text-[#2B90DC] mr-2"></i> Your Global Gateways</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">Connecting passionate Bangladeshi students to world-class educational ecosystems.</p>
+    </div>
+
+    <!-- 🧭 স্লাইডার নেভিগেশন ডটস (Dots indicator) -->
+    <div class="absolute top-4 right-4 flex gap-1.5 z-10 bg-slate-950/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/5">
+        <span class="dot w-2 h-2 rounded-full bg-white transition-all duration-300 cursor-pointer"></span>
+        <span class="dot w-2 h-2 rounded-full bg-white/40 transition-all duration-300 cursor-pointer"></span>
+        <span class="dot w-2 h-2 rounded-full bg-white/40 transition-all duration-300 cursor-pointer"></span>
+    </div>
+</div>
     </section>
 
     <section id="destinations" class="py-24 px-6 max-w-7xl mx-auto relative">
@@ -386,6 +410,50 @@
             <p>© 2026 Edulink. All rights reserved.</p>
         </div>
     </footer>
+<!-- 🚀 স্লাইডার লজিক স্ক্রিপ্ট -->
+<script>
+    const slider = document.getElementById('slider');
+    const dots = document.querySelectorAll('.dot');
+    let currentIndex = 0;
+    const totalSlides = dots.length;
+
+    function updateSlider(index) {
+        // ইমেজ স্লাইড করানোর মূল লজিক
+        slider.style.transform = `translateX(-${index * 100}%)`;
+        
+        // ডটসের অ্যাক্টিভ স্টেট চেঞ্জ করা
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.remove('bg-white/40', 'w-2');
+                dot.classList.add('bg-white', 'w-5'); // অ্যাক্টিভ ডটটি একটু লম্বা (pill shape) দেখাবে
+            } else {
+                dot.classList.remove('bg-white', 'w-5');
+                dot.classList.add('bg-white/40', 'w-2');
+            }
+        });
+        currentIndex = index;
+    }
+
+    // অটো স্লাইড ফাংশন (৩ সেকেন্ড পর পর চলবে)
+    function autoSlide() {
+        let nextIndex = (currentIndex + 1) % totalSlides;
+        updateSlider(nextIndex);
+    }
+
+    let slideInterval = setInterval(autoSlide, 3000);
+
+    // ডটসে ক্লিক করলে নির্দিষ্ট ইমেজে চলে যাওয়ার ব্যবস্থা
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            clearInterval(slideInterval); // ক্লিক করলে অটো স্লাইড সাময়িক থামবে
+            updateSlider(index);
+            slideInterval = setInterval(autoSlide, 3000); // আবার নতুন করে ইন্টারভাল শুরু হবে
+        });
+    });
+
+    // প্রথম স্লাইডটি লোড হওয়ার সময় অ্যাক্টিভ ডট সেট করা
+    updateSlider(0);
+</script>
 
 </body>
 </html>
